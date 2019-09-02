@@ -38,4 +38,5 @@ sendgrid.env
 Scripts/
 Lib/
 Include/
-*/__init__.py
+__pycache__
+pyvenv.cfg
