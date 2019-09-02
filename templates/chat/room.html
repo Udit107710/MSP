@@ -21,6 +21,7 @@
         var data = JSON.parse(e.data);
         var message = data['message'];
         document.querySelector('#chat-log').value += (message + '\n');
+        console.log('received ' +message );
     };
 
     chatSocket.onclose = function(e) {
@@ -38,10 +39,11 @@
         var messageInputDom = document.querySelector('#chat-message-input');
         var message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
-            'message': message
+            'message': message,
         }));
 
         messageInputDom.value = '';
+        console.log('sent ' + message)
     };
 </script>
 </html>
