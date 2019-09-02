@@ -39,3 +39,4 @@ sendgrid.env
 Scripts/
 Lib/
 Include/
+*/__init__.py
