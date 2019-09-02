@@ -31,7 +31,6 @@ dist/
 /media/
 /node_modules/
 /static/
-/saleor/static/assets/
 webpack-bundle.json
 /templates/templated_email/compiled/*
 !/templates/templated_email/compiled/.gitkeep
@@ -39,4 +38,4 @@ sendgrid.env
 Scripts/
 Lib/
 Include/
-*\__init__.py
+*/__init__.py
