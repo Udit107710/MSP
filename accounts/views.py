@@ -2,6 +2,7 @@ from rest_framework.views import View
 from rest_framework.response import Response
 from .serializers import UserLoginSerializer
 from django.contrib.auth import authenticate, login
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 class Login(View):
     def post(self, request):
         serializer = UserLoginSerializer(request.body)
-        logger.log("Login data received")
+        logger.log("Login data received for user", serializer.initial_data['username'])
         if serializer.is_valid:
             user = authenticate(request, username=serializer.validated_data['username'], password=serializer.validated_data['password'])
             if user:
@@ -20,4 +21,3 @@ class Login(View):
                 return Response({'user': '', 'error': 'Invalid credentials'}, status=401)
         else:
             return Response({'user': '', 'error': 'Invalid username/password'}, status=400)
-

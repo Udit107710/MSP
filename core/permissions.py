@@ -1,8 +1,8 @@
 from django.contrib.auth.models import Permission
 
 MODELS_PERMISSIONS = [
-    "account.manage_user",
-    "account.manage_staff",
+    "accounts.manage_user",
+    "accounts.manage_staff",
 ]
 
 

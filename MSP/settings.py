@@ -28,7 +28,7 @@ SECRET_KEY = '2chi@dm7oxftoq+#kz+5uqlhc^6wk@w^%nf^@i7!4otscjv*83'
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "accounts.User"
 
 # Application definition
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'chat',
-    'account',
+    'accounts',
     'rest_framework',
 ]
 
