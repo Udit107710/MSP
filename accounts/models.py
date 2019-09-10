@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
      PermissionsMixin,
 )
 
-from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
+from phonenumber_field.modelfields import PhoneNumberField
 from versatileimagefield.fields import VersatileImageField
 from .validators import validate_possible_number
 from django.core.validators import MaxValueValidator, MinValueValidator
