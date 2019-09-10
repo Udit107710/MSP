@@ -18,12 +18,13 @@ class PossiblePhoneNumberField(PhoneNumberField):
 
 
 class Teacher(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teacher")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teachers")
     avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True)
     field_of_study = models.CharField(max_length=200)
     slots_occupied = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
     phone = PhoneNumberField(null=True)
     department = models.CharField(max_length=200)
+    is_student = models.BooleanField(default=False)
     is_ac = models.BooleanField(default=False)
     is_professor = models.BooleanField(default=False)
     is_hod = models.BooleanField(default=False)
@@ -33,12 +34,16 @@ class Teacher(models.Model):
 
 
 class Student(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="students")
     enrollment_number = models.CharField(max_length=10)
     sap_id = models.CharField(max_length=10)
     program = models.CharField(max_length=100)
     semester = models.IntegerField(validators=[MaxValueValidator(12), MinValueValidator(1)])
     cgpa = models.FloatField(blank=True)
+    is_student = models.BooleanField(default=True)
+    is_ac = models.BooleanField(default=False)
+    is_professor = models.BooleanField(default=False)
+    is_hod = models.BooleanField(default=False)
 
     class Meta:
         permissions = [('manage_users', 'Can manage users')]

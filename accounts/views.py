@@ -7,23 +7,15 @@ from core.utils import ExampleAuthentication
 from django.shortcuts import HttpResponse
 from django.shortcuts import get_object_or_404
 import json
+from .utils import check_user
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class Login(APIView):
-    def post(self, request):
-        print(request.data)
-        serializer = UserLoginSerializer(data=request.data)
-
-        logger.log(1, "Login data received for user")
-        if serializer.is_valid():
-            user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
-            if user:
-                login(request, user=user)
-                return HttpResponse(json.dumps({"user": user.username, "error": ""}), status=200, content_type="application/json")
-            else:
-                return HttpResponse(json.dumps({"user": "", "error": "Invalid credentials"}), status=401, content_type="application/json")
-        else:
-            return HttpResponse(json.dumps({"user": "", "error": serializer.errors}), status=400, content_type="application/json")
+class CheckType(APIView):
+    def get(self, request):
+        data = request.data
+        username = data['username']
+        type_of_user = check_user(username=username)
+        return Response({"type": type_of_user}, content_type="application/json", status=200)
