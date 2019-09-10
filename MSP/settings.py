@@ -28,7 +28,6 @@ SECRET_KEY = '2chi@dm7oxftoq+#kz+5uqlhc^6wk@w^%nf^@i7!4otscjv*83'
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-AUTH_USER_MODEL = "accounts.User"
 
 # Application definition
 
@@ -39,17 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
+    #'channels',
     'chat',
     'accounts',
     'rest_framework',
+    'djoser',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -75,7 +76,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'MSP.wsgi.application'
-ASGI_APPLICATION = "MSP.routing.application"
+#ASGI_APPLICATION = "MSP.routing.application"
 
 CHANNEL_LAYERS = {
     'default': {
@@ -133,9 +134,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
