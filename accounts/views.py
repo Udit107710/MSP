@@ -14,8 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class CheckType(APIView):
-    def get(self, request):
-        data = request.data
-        username = data['username']
+    def get(self, request, username):
         type_of_user = check_user(username=username)
         return Response({"type": type_of_user}, content_type="application/json", status=200)
