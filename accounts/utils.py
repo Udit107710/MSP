@@ -13,9 +13,9 @@ def check_student(username):
 def check_teacher(username):
     user = Teacher.objects.filter(user__username=username, is_professor=True)
     if user:
-        if user.is_ac:
+        if user.type_of_user == 2:
             return "Activity coordinator"
-        elif user.is_hod:
+        elif user.type_of_user == 1:
             return "Head of Department"
         return "Professor"
     else:
