@@ -30,3 +30,16 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     lookup_field = "user__username"
+
+
+class CheckUserType(APIView):
+    def get(self, request, username):
+        # student = Student.objects.filter(user__username=username)
+        # if student is not None:
+        #     return HttpResponse(json.dumps({'type': 'student'}), content_type="application/json", status=200)
+        # teacher = Teacher.objects.filter(user__username=username)
+        # if teacher is not None:
+        #     if teacher.filter()
+        user = get_object_or_404(User, username=username)
+        type_of_user = check_user(username)
+        return HttpResponse(json.dumps({'type': type_of_user}), content_type="application/json", status=200)

@@ -3,7 +3,7 @@ from .models import Student, Teacher
 
 
 def check_student(username):
-    user = Student.objects.filter(user__username=username, is_student=True)
+    user = Student.objects.filter(user__username=username)
     if user:
         return True
     else:
@@ -11,11 +11,11 @@ def check_student(username):
 
 
 def check_teacher(username):
-    user = Teacher.objects.filter(user__username=username, is_professor=True)
+    user = Teacher.objects.filter(user__username=username)
     if user:
-        if user.type_of_user == 2:
+        if user.filter(type_of_user=2):
             return "Activity coordinator"
-        elif user.type_of_user == 1:
+        elif user.filter(type_of_user=1):
             return "Head of Department"
         return "Professor"
     else:
@@ -25,8 +25,7 @@ def check_teacher(username):
 def check_user(username):
     if check_student(username=username):
         return "Student"
+    elif check_teacher(username=username) is not False:
+        return check_teacher(username=username)
     else:
-        if check_teacher(username=username) is not False:
-            return check_teacher(username=username)
-        else:
-            return "SuperUser"
+        return "SuperUser"
