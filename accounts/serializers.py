@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(many=False, read_only=True, slug_field='email')
+
     class Meta:
         model = models.Student
         fields = '__all__'
@@ -18,6 +19,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 class TeacherSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(many=False, read_only=True, slug_field='email')
+
     class Meta:
         model = models.Teacher
         fields = '__all__'
