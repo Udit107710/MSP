@@ -20,15 +20,15 @@ class Project(models.Model):
         (2, "Rejected")
     ]
 
-    project_type = models.IntegerField(choices=PROJECT_TYPE_CHOICES, default=4, null=True)
+    project_type = models.IntegerField(choices=PROJECT_TYPE_CHOICES, default=4, null=True, blank=True)
     title = models.CharField(max_length=100)
-    abstract = models.CharField(max_length=500, null=True)
-    proposal = models.FileField(upload_to="proposals", null=True)
+    abstract = models.CharField(max_length=500, null=True, blank=True)
+    proposal = models.FileField(upload_to="proposals", null=True, blank=True)
     associated_files = models.FileField(upload_to=content_file_name, blank=True, null=True)
 
-    status = models.IntegerField(choices=PROJECT_STATUS_CHOICES, default=0, null=True)
+    status = models.IntegerField(choices=PROJECT_STATUS_CHOICES, default=0, blank=True, null=True)
 
-    members = models.ManyToManyField(Student, null=True)
-    mentor = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING, null=True)
+    members = models.ManyToManyField(Student, null=True, blank=True)
+    mentor = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING, blank=True, null=True)
 
 
