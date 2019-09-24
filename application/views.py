@@ -9,7 +9,7 @@ import json
 class ProposeProject(View):
     @csrf_exempt
     def post(self, request):
-        form = ProjectForm(request.body)
+        form = ProjectForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
