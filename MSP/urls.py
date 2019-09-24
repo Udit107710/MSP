@@ -21,5 +21,6 @@ from django.contrib import admin
 urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('admin/', admin.site.urls),
+    path('application/', include('application.urls')),
     path('api/auth/', include('djoser.urls.authtoken'))
 ]
