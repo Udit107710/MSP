@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from rest_framework.generics import ListAPIView
+from rest_framework import viewsets
 from .forms import ProjectForm
+from .models import Project
+from .serializers import ProjectProposalSerializer
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import HttpResponse
@@ -15,3 +18,9 @@ class ProposeProject(View):
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
         else:
             return HttpResponse(json.dumps({'errors': form.errors}), status=400, content_type="application/json")
+
+
+class ProposalViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectProposalSerializer
+    lookup_field = 'mentor'

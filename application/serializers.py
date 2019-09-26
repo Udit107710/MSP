@@ -1,18 +1,12 @@
 from rest_framework import serializers
-from .models import Project, Team
+from .models import Project
 from accounts.serializers import UserSerializer
 
 
 class ProjectProposalSerializer(serializers.ModelSerializer):
+    members = serializers.SlugRelatedField(slug_field='sap_id', many=True, read_only=True)
+    mentor = serializers.SlugRelatedField(slug_field='user__username', many=False, read_only=True)
+
     class Meta:
         model = Project
-        exclude = ('associated_files', 'status')
-
-
-class TeamSerializer(serializers.ModelSerializer):
-    members = serializers.SlugRelatedField(many=True, slug_field='username')
-    project = serializers.SlugRelatedField(slug_field='title')
-
-    class Meta:
-        model = Team
-        fields = '__all__'
+        exclude = ('associated_files', 'proposal')
