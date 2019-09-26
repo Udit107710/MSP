@@ -6,11 +6,11 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'first_name', 'last_name']
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(many=False, read_only=True, slug_field='email')
+    user = UserSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Student
@@ -18,7 +18,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class TeacherSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(many=False, read_only=True, slug_field='email')
+    user = UserSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Teacher

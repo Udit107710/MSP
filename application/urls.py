@@ -12,5 +12,5 @@ student_proposal_list = StudentProposalViewSet.as_view({
 urlpatterns = [
     path(r"propose/", ProposeProject.as_view(), name="propose-project"),
     path(r"proposal/mentor/<str:mentor>", mentor_proposal_list, name="mentor-proposal-list"),
-    path(r"proposal/student/<str:members", student_proposal_list, name="student-proposal-list"),
+    path(r"proposal/student/<str:members>", student_proposal_list, name="student-proposal-list"),
 ]
