@@ -20,7 +20,13 @@ class ProposeProject(View):
             return HttpResponse(json.dumps({'errors': form.errors}), status=400, content_type="application/json")
 
 
-class ProposalViewSet(viewsets.ModelViewSet):
+class MentorProposalViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectProposalSerializer
     lookup_field = 'mentor'
+
+
+class StudentProposalViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectProposalSerializer
+    lookup_field = 'members'

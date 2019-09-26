@@ -1,11 +1,16 @@
 from django.urls import path
-from .views import ProposeProject, ProposalViewSet
+from .views import ProposeProject, MentorProposalViewSet, StudentProposalViewSet
 
-proposal_list = ProposalViewSet.as_view({
+mentor_proposal_list = MentorProposalViewSet.as_view({
+    'get': 'list'
+})
+
+student_proposal_list = StudentProposalViewSet.as_view({
     'get': 'list'
 })
 
 urlpatterns = [
     path(r"propose/", ProposeProject.as_view(), name="propose-project"),
-    path(r"proposal/<str:mentor>", proposal_list, name="proposal-list"),
+    path(r"proposal/mentor/<str:mentor>", mentor_proposal_list, name="mentor-proposal-list"),
+    path(r"proposal/student/<str:members", student_proposal_list, name="student-proposal-list"),
 ]

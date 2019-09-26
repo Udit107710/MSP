@@ -4,7 +4,7 @@ from accounts.serializers import UserSerializer
 
 
 class ProjectProposalSerializer(serializers.ModelSerializer):
-    members = serializers.SlugRelatedField(slug_field='sap_id', many=True, read_only=True)
+    members = serializers.SlugRelatedField(slug_field='user__username', many=True, read_only=True)
     mentor = serializers.SlugRelatedField(slug_field='user__username', many=False, read_only=True)
 
     class Meta:

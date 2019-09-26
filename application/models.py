@@ -28,7 +28,7 @@ class Project(models.Model):
 
     status = models.IntegerField(choices=PROJECT_STATUS_CHOICES, default=0, blank=True, null=True)
 
-    members = models.ManyToManyField(Student, null=True, blank=True)
+    members = models.ManyToManyField(Student, blank=True)
     mentor = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING, blank=True, null=True)
 
 
