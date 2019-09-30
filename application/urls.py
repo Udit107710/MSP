@@ -10,7 +10,8 @@ student_proposal_list = StudentProposalViewSet.as_view({
 })
 
 proposal_detail = DetailProposalViewSet.as_view({
-    'get': 'retrieve'
+    'get': 'retrieve',
+    'post': 'update'
 })
 
 urlpatterns = [
