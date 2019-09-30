@@ -11,3 +11,12 @@ class ProjectProposalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         exclude = ('associated_files', 'proposal')
+
+
+class ProjectDetailProposalSerializer(serializers.ModelSerializer):
+    members = UserSerializer(many=True, read_only=True)
+    mentor = UserSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = '__all__'

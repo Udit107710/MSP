@@ -2,7 +2,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework import viewsets
 from .forms import ProjectForm
 from .models import Project
-from .serializers import ProjectProposalSerializer
+from .serializers import ProjectProposalSerializer, ProjectDetailProposalSerializer
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import HttpResponse
@@ -30,3 +30,9 @@ class StudentProposalViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectProposalSerializer
     lookup_field = 'members'
+
+
+class DetailProposalViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectDetailProposalSerializer
+    lookup_field = 'pk'
