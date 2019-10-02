@@ -24,7 +24,7 @@ class ProposeProject(View):
 class MentorProposalViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectProposalSerializer
-    lookup_field = 'mentor__user__username'
+    lookup_field = 'mentor__user_username'
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
