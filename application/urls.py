@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProposeProject, StudentProposalViewSet, DetailProposalViewSet, GetExcel, MentorProposalList, MentorProposalViewSet
+from .views import ProposeProject, StudentProposalViewSet, DetailProposalViewSet, GetExcel, MentorProposalViewSet
 
 mentor_proposal_list = MentorProposalViewSet.as_view({
     'get': 'list'
