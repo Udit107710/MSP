@@ -30,7 +30,7 @@ class ProposeProject(View):
 class MentorProposalList(View):
     @csrf_exempt
     def get(self, request, mentor__user__username):
-        proposals = list(Project.objects.filter(mentor__user__username=mentor__user__username).defer('associated_files', 'proposal'))
+        proposals = list(Project.objects.all().select_related('mentor__user').filter(mentor__user__username=mentor__user__username).defer('associated_files', 'proposal'))
         print(proposals)
         serializer = ProjectProposalSerializer(data=proposals, many=True)
         if serializer.is_valid():
