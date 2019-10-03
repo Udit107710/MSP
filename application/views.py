@@ -21,10 +21,22 @@ class ProposeProject(View):
             return HttpResponse(json.dumps({'errors': form.errors}), status=400, content_type="application/json")
 
 
-class MentorProposalViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all().select_related('mentor__user')
-    serializer_class = ProjectProposalSerializer
-    lookup_field = 'mentor__user__username'
+# class MentorProposalViewSet(viewsets.ModelViewSet):
+#     queryset = Project.objects.all().select_related('mentor__user')
+#     serializer_class = ProjectProposalSerializer
+#     lookup_field = 'mentor__user__username'
+
+
+class MentorProposalList(View):
+    @csrf_exempt
+    def get(self, request, mentor__user__username):
+        proposals = Project.objects.filter(mentor__user__username=mentor__user__username)
+        print(proposals)
+        serializer = ProjectProposalSerializer(data=proposals, many=True)
+        if serializer.is_valid():
+            return HttpResponse(serializer, status=200, content_type="application/json")
+        else:
+            return HttpResponse(serializer.errors, status=200, content_type="application/json")
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
