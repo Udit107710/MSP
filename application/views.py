@@ -34,10 +34,10 @@ class MentorProposalList(View):
         print(proposals)
         serializer = ProjectProposalSerializer(data=proposals, many=True)
         if serializer.is_valid():
-            return HttpResponse(json.dumps({'errors': '', 'success': serializer}), status=200, content_type="application/json")
+            return HttpResponse(serializer, status=200, content_type="application/json")
         else:
             print(serializer.errors)
-            return HttpResponse(json.dumps({'errors': serializer.errors, 'success': ''}), status=200, content_type="application/json")
+            return HttpResponse("errors", status=200, content_type="application/json")
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
