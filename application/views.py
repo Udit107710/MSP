@@ -22,7 +22,7 @@ class ProposeProject(View):
 
 
 class MentorProposalViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
+    queryset = Project.objects.all().select_related('mentor__user')
     serializer_class = ProjectProposalSerializer
     lookup_field = 'mentor__user__username'
 
