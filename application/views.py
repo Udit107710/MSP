@@ -30,13 +30,14 @@ class ProposeProject(View):
 class MentorProposalList(View):
     @csrf_exempt
     def get(self, request, mentor__user__username):
-        proposals = Project.objects.filter(mentor__user__username=mentor__user__username)
+        proposals = Project.objects.filter(mentor__user__username=mentor__user__username).defer('associated_files', 'proposal')
         print(proposals)
         serializer = ProjectProposalSerializer(data=proposals, many=True)
         if serializer.is_valid():
-            return HttpResponse(serializer, status=200, content_type="application/json")
+            return HttpResponse(json.dumps({'errors': '', 'success': serializer}), status=200, content_type="application/json")
         else:
-            return HttpResponse(serializer.errors, status=200, content_type="application/json")
+            print(serializer.errors)
+            return HttpResponse(json.dumps({'errors': serializer.errors, 'success': ''}), status=200, content_type="application/json")
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
