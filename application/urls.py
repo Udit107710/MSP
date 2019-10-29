@@ -19,5 +19,5 @@ urlpatterns = [
     path(r"proposal/mentor/<str:mentor__user__username>", mentor_proposal_list, name="mentor-proposal-list"),
     path(r"proposal/student/<str:members>", student_proposal_list, name="student-proposal-list"),
     path(r"proposal/detail/<str:pk>", proposal_detail, name="proposal-detail"),
-    path(r"proposals/excel/<str:username>", GetExcel.as_view, name="proposals-excel")
+    path(r"proposals/excel/<str:username>", GetExcel.as_view(), name="proposals-excel")
 ]
