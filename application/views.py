@@ -57,11 +57,15 @@ class GetExcel(APIView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
         writer = csv.writer(response)
-        projects = list(Project.objects.filter(mentor__username=username).defer('mentor'))
-        fields = ['project_type', 'title', 'abstract', 'proposal', 'associated_files', 'status', 'members']
+        #projects = list(Project.objects.filter(mentor__user__username=username).defer('mentor'))
+        projects = list(Project.objects.all().defer('mentor'))
+        fields = ['project_type', 'title', 'abstract', 'proposal', 'associated_files', 'status', 'members','mentor_name']
         writer.writerow(fields)
 
         for project in projects:
-            writer.writerow(project)
+            row=[project.project_type,project.title,project.abstract,project.proposal,
+            project.associated_files,project.status,project.members,project.mentor]
+            writer.writerow(row)
+
 
         return response
