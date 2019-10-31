@@ -22,7 +22,7 @@ class Teacher(models.Model):
         (1, "HOD"),
         (2, "AC"),
         (3, "Professor")]
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="teachers")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="teachers", primary_key=True)
     avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True)
     field_of_study = models.CharField(max_length=200)
     slots_occupied = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
@@ -37,7 +37,7 @@ class Teacher(models.Model):
 class Student(models.Model):
     USER_TYPE_CHOICES = [
         (0, "Student")]
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="students")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="students", primary_key=True)
     enrollment_number = models.CharField(max_length=10)
     sap_id = models.CharField(max_length=10)
     program = models.CharField(max_length=100)

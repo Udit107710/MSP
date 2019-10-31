@@ -23,7 +23,7 @@ class Project(models.Model):
     project_type = models.IntegerField(choices=PROJECT_TYPE_CHOICES, default=4, null=True, blank=True)
     title = models.CharField(max_length=100)
     abstract = models.CharField(max_length=500, null=True, blank=True)
-    proposal = models.FileField(upload_to="proposals", null=True, blank=True)
+    proposal = models.FileField(upload_to="proposals", null=False, blank=False)
     associated_files = models.FileField(upload_to=content_file_name, blank=True, null=True)
 
     status = models.IntegerField(choices=PROJECT_STATUS_CHOICES, default=0, blank=True, null=True)

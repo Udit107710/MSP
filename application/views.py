@@ -13,7 +13,8 @@ import json
 class ProposeProject(View):
     @csrf_exempt
     def post(self, request):
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST, request.FILES)
+        
         if form.is_valid():
             form.save()
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
@@ -53,19 +54,23 @@ class DetailProposalViewSet(viewsets.ModelViewSet):
 
 
 class GetExcel(APIView):
-    def get(self, request, username):
+    def get(self, request, id):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
         writer = csv.writer(response)
         #projects = list(Project.objects.filter(mentor__user__username=username).defer('mentor'))
-        projects = list(Project.objects.all().defer('mentor'))
+        # projects = list(Project.objects.all().defer('mentor'))
+        projects = list(Project.objects.filter(mentor_id=id))
         fields = ['project_type', 'title', 'abstract', 'proposal', 'associated_files', 'status', 'members','mentor_name']
         writer.writerow(fields)
 
         for project in projects:
             row=[project.project_type,project.title,project.abstract,project.proposal,
-            project.associated_files,project.status,project.members,project.mentor]
+            project.associated_files,project.status,project.members,project.mentor.user.first_name+" "+project.mentor.user.last_name]
             writer.writerow(row)
-
-
         return response
+
+class GetAcceptedProposals(APIView):
+    def get(self,request,id):
+        response = HttpResponse(content_type="application/json")
+        
