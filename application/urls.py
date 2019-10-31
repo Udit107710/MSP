@@ -1,10 +1,12 @@
 from django.urls import path
 from .views import ProposeProject, StudentProposalViewSet, DetailProposalViewSet, GetExcel, MentorProposalViewSet
 
+#TODO: show only those proposals whose status is "not accepted"
 mentor_proposal_list = MentorProposalViewSet.as_view({
     'get': 'list'
 })
 
+#show all the porposals submited by the student.
 student_proposal_list = StudentProposalViewSet.as_view({
     'get': 'list'
 })
