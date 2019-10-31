@@ -117,6 +117,3 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .historyproposals/time_conversion.png
-
-#msp#
-proposals/*.*
