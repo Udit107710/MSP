@@ -2,12 +2,14 @@ from rest_framework import viewsets
 from .forms import ProjectForm
 from .models import Project
 from .serializers import ProjectProposalSerializer, ProjectDetailProposalSerializer
+from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import HttpResponse
 from rest_framework.views import APIView
 import csv
 import json
+
 
 
 class ProposeProject(View):
@@ -23,10 +25,10 @@ class ProposeProject(View):
 
 
 class MentorProposalViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all().select_related('mentor__user')
     serializer_class = ProjectProposalSerializer
-    lookup_field = 'mentor__user__username'
-
+    def get_queryset(self):
+        queryset = Project.objects.filter(mentor__user_id=self.kwargs['mentor__user_id'])
+        return queryset
 
 # class MentorProposalList(View):
 #     @csrf_exempt
@@ -44,7 +46,10 @@ class MentorProposalViewSet(viewsets.ModelViewSet):
 class StudentProposalViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectProposalSerializer
-    lookup_field = 'members'
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        
 
 
 class DetailProposalViewSet(viewsets.ModelViewSet):
@@ -70,7 +75,9 @@ class GetExcel(APIView):
             writer.writerow(row)
         return response
 
-class GetAcceptedProposals(APIView):
-    def get(self,request,id):
-        response = HttpResponse(content_type="application/json")
+class GetAcceptedProposals(viewsets.ModelViewSet):
+    serializer_class = ProjectProposalSerializer
+    def get_queryset(self):
+        return Project.objects.filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=1)
+
         
