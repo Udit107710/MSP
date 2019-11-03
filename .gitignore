@@ -120,3 +120,5 @@ GitHub.sublime-settings
 .historyproposals/time_conversion.png
 
 */migraions/
+application/migrations/
+accounts/migrations/
