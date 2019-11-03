@@ -31,4 +31,7 @@ class Project(models.Model):
     members = models.ManyToManyField(Student, blank=True)
     mentor = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
