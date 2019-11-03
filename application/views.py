@@ -28,7 +28,17 @@ class MentorProposalViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=0)
-        return queryset
+        result = []
+        for item in queryset:
+            flag = True
+            for member in item.members:
+                if member.lock == 1:
+                    flag = False
+                    break
+            if flag:
+                result.append(item)
+
+        return result
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
