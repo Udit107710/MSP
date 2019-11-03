@@ -27,7 +27,7 @@ class ProposeProject(View):
 class MentorProposalViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
     def get_queryset(self):
-        queryset = Project.objects.filter(mentor__user_id=self.kwargs['mentor__user_id'])
+        queryset = Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=0)
         return queryset
 
 # class MentorProposalList(View):
@@ -59,14 +59,14 @@ class DetailProposalViewSet(viewsets.ModelViewSet):
 
 
 class GetExcel(APIView):
-    def get(self, request, id):
+    def get(self, request,id,status):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
         writer = csv.writer(response)
         #projects = list(Project.objects.filter(mentor__user__username=username).defer('mentor'))
         # projects = list(Project.objects.all().defer('mentor'))
-        projects = list(Project.objects.filter(mentor_id=id))
-        fields = ['project_type', 'title', 'abstract', 'proposal', 'associated_files', 'status', 'members','mentor_name']
+        projects = list(Project.objects.order_by('created_at').filter(mentor_id=id).filter(status=status))
+        fields = ['Project Type', 'Title', 'Description', 'proposal', 'associated_files', 'Status', 'members','Mentor']
         writer.writerow(fields)
 
         for project in projects:
@@ -78,6 +78,25 @@ class GetExcel(APIView):
 class GetAcceptedProposals(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
     def get_queryset(self):
-        return Project.objects.filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=1)
+        return Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=1)
+
+class ProposalStatus(APIView):
+    serializer_class = ProjectProposalSerializer
+    def put(self,request,*args,**kwargs):
+        try:
+            proposal = Project.objects.get(pk=kwargs['id'])
+            if kwargs['status']==0:
+                proposal.status=0
+            elif kwargs['status']==1:
+                proposal.status=1
+            elif kwargs['status']==2:
+                proposal.status=2
+            else:
+                return HttpResponse(json.dumps({'errors':'Invalid status sent'}),status=400,content_type="application/json")
+            proposal.save()
+            return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
+        except Project.DoesNotExist:
+            return HttpResponse(json.dumps({'errors': 'Object does not exist'}), status=400, content_type="application/json")
+
 
         
