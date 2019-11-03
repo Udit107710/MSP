@@ -38,9 +38,9 @@ class Student(models.Model):
     USER_TYPE_CHOICES = [
         (0, "Student")]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="students")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="students", primary_key=True)
     enrollment_number = models.CharField(max_length=10)
-    sap_id = models.CharField(max_length=10, primary_key=True)
+    sap_id = models.CharField(max_length=10)
     program = models.CharField(max_length=100)
     semester = models.IntegerField(validators=[MaxValueValidator(12), MinValueValidator(1)])
     cgpa = models.FloatField(blank=True)
