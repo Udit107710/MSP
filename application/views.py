@@ -9,6 +9,8 @@ from django.shortcuts import HttpResponse
 from rest_framework.views import APIView
 import csv
 import json
+from itertools import chain
+from accounts.models import Student
 
 
 
@@ -18,7 +20,21 @@ class ProposeProject(View):
         form = ProjectForm(request.POST, request.FILES)
         
         if form.is_valid():
-            form.save()
+            proposal = form.save(commit=False)
+            sap_2 = request.POST.get('member2_sapid',-1)
+            sap_3 = request.POST.get('member3_sapid',-1)
+            sap_4 = request.POST.get('member4_sapid',-1)
+            
+            try:
+                if sap_2!=-1:
+                    proposal.member2 = Student.objects.filter(lock=0).get(sap_id=sap_2)
+                if sap_3!=-1:
+                    proposal.member3 = Student.objects.filter(lock=0).get(sap_id=sap_3)
+                if sap_4!=-1:
+                    proposal.member4 = Student.objects.filter(lock=0).get(sap_id=sap_4)
+            except Student.DoesNotExist:
+                return HttpResponse(json.dumps({'errors': "member does not exits or is locked"+sap_2+":"+sap_3}), status=400, content_type="application/json")
+            proposal.save()
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
         else:
             return HttpResponse(json.dumps({'errors': form.errors}), status=400, content_type="application/json")
@@ -44,11 +60,15 @@ class MentorProposalViewSet(viewsets.ModelViewSet):
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
     serializer_class = ProjectProposalSerializer
 
-    def get_object(self):
-        queryset = self.get_queryset()
+    def get_queryset(self):
+        qset1 = Project.objects.order_by('updated_at').filter(member1_id=self.kwargs['id'])
+        qset2 = Project.objects.order_by('updated_at').filter(member2_id=self.kwargs['id'])
+        qset3 = Project.objects.order_by('updated_at').filter(member3_id=self.kwargs['id'])
+        qset4 = Project.objects.order_by('updated_at').filter(member4_id=self.kwargs['id'])
+        qset = list(chain(qset1,qset2,qset3,qset4))
+        return qset
         
 
 

@@ -7,7 +7,10 @@ from accounts.serializers import TeacherSerializer
 
 
 class ProjectProposalSerializer(serializers.ModelSerializer):
-    members = StudentSerializer(many=True, read_only=True)
+    member1 = StudentSerializer(many=False,read_only=True)
+    member2 = StudentSerializer(many=False,read_only=True)
+    member3 = StudentSerializer(many=False,read_only=True)
+    member4 = StudentSerializer(many=False,read_only=True)
     mentor = TeacherSerializer(many=False, read_only=True)
 
     class Meta:
