@@ -11,6 +11,8 @@ import csv
 import json
 from itertools import chain
 from accounts.models import Student
+from accounts.models import Teacher
+
 
 
 
@@ -33,7 +35,7 @@ class ProposeProject(View):
                 if sap_4!=-1:
                     proposal.member4 = Student.objects.filter(lock=0).get(sap_id=sap_4)
             except Student.DoesNotExist:
-                return HttpResponse(json.dumps({'errors': "member does not exits or is locked"+sap_2+":"+sap_3}), status=400, content_type="application/json")
+                return HttpResponse(json.dumps({'errors': "member does not exits or is locked "+str(sap_2)+" "+str(sap_3)+" "+str(sap_4)}), status=400, content_type="application/json")
             proposal.save()
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
         else:
@@ -43,7 +45,7 @@ class ProposeProject(View):
 class MentorProposalViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
     def get_queryset(self):
-        queryset = Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=0)
+        queryset = Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=0).reverse()
         return queryset
 
 # class MentorProposalList(View):
@@ -63,11 +65,11 @@ class StudentProposalViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
 
     def get_queryset(self):
-        qset1 = Project.objects.order_by('updated_at').filter(member1_id=self.kwargs['id'])
-        qset2 = Project.objects.order_by('updated_at').filter(member2_id=self.kwargs['id'])
-        qset3 = Project.objects.order_by('updated_at').filter(member3_id=self.kwargs['id'])
-        qset4 = Project.objects.order_by('updated_at').filter(member4_id=self.kwargs['id'])
-        qset = list(chain(qset1,qset2,qset3,qset4))
+        qset1 = Project.objects.filter(member1_id=self.kwargs['id'])
+        qset2 = Project.objects.filter(member2_id=self.kwargs['id'])
+        qset3 = Project.objects.filter(member3_id=self.kwargs['id'])
+        qset4 = Project.objects.filter(member4_id=self.kwargs['id'])
+        qset = (qset1 | qset2 | qset3 | qset4).order_by('updated_at').reverse()
         return qset
         
 
@@ -85,20 +87,20 @@ class GetExcel(APIView):
         writer = csv.writer(response)
         #projects = list(Project.objects.filter(mentor__user__username=username).defer('mentor'))
         # projects = list(Project.objects.all().defer('mentor'))
-        projects = list(Project.objects.order_by('created_at').filter(mentor_id=id).filter(status=status))
-        fields = ['Project Type', 'Title', 'Description', 'proposal', 'associated_files', 'Status', 'members','Mentor']
+        projects = list(Project.objects.order_by('created_at').filter(mentor_id=id).filter(status=status).reverse())
+        fields = ['Project Type', 'Title', 'Description', 'proposal', 'associated_files', 'Status', 'member1','member2','Mentor']
         writer.writerow(fields)
 
         for project in projects:
             row=[project.project_type,project.title,project.abstract,project.proposal,
-            project.associated_files,project.status,project.members,project.mentor.user.first_name+" "+project.mentor.user.last_name]
+            project.associated_files,project.status,project.member1.user.first_name,project.member2.user.first_name,project.mentor.user.first_name+" "+project.mentor.user.last_name]
             writer.writerow(row)
         return response
 
 class GetAcceptedProposals(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
     def get_queryset(self):
-        return Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=1)
+        return Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=1).reverse()
 
 class ProposalStatus(APIView):
     serializer_class = ProjectProposalSerializer
@@ -113,10 +115,29 @@ class ProposalStatus(APIView):
                 proposal.status=2
             else:
                 return HttpResponse(json.dumps({'errors':'Invalid status sent'}),status=400,content_type="application/json")
+            mentor = Teacher.objects.get(pk=proposal.mentor_id)
+            if(mentor.slots_occupied==5):
+                return HttpResponse(json.dumps({'errors':'Mentor slots_occupied are full'}),status=400,content_type="application/json")
+            mentor.slots_occupied = mentor.slots_occupied+1
+            mentor.save()
             proposal.save()
+            #lock the student if proposal is accepted
+            if proposal.status==1:
+                memberlist = []
+                if proposal.member1!=None:
+                    memberlist.append(proposal.member1)
+                if proposal.member2!=None:
+                    memberlist.append(proposal.member2)
+                if proposal.member3!=None:
+                    memberlist.append(proposal.member3)
+                if proposal.member4!=None:
+                    memberlist.append(proposal.member4)
+                
+                for member in memberlist:
+                    member_obj = Student.objects.get(pk=member.user_id)
+                    member_obj.lock=1
+                    member_obj.save()
+
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
         except Project.DoesNotExist:
             return HttpResponse(json.dumps({'errors': 'Object does not exist'}), status=400, content_type="application/json")
-
-
-        
