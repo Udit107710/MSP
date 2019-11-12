@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TeacherViewSet, StudentViewSet, UserViewSet, CheckUserType
+from .views import TeacherViewSet, StudentViewSet, UserViewSet, CheckUserType, index
 
 teacher_list = TeacherViewSet.as_view({
     'get': 'list'
@@ -22,5 +22,8 @@ urlpatterns = [
     path(r"user/<str:username>", user_detail, name="user-detail"),
     path(r"student/<str:user__username>", student_detail, name="student-detail"),
     path(r"teacher/<str:user__username>", teacher_detail, name="teacher-detail"),
-    path(r"check/<str:username>", CheckUserType.as_view(), name="check-user-type")
+    path(r"check/<str:username>", CheckUserType.as_view(), name="check-user-type"),
+
+    #index page
+    path('', index, name='index')
 ]

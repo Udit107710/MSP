@@ -7,6 +7,7 @@ from .utils import check_user
 import logging
 from .models import Student, Teacher
 from .serializers import StudentSerializer, TeacherSerializer, UserSerializer
+from django.template import loader
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
-    queryset = Teacher.objects.all()
+    queryset = Teacher.objects.all().order_by('user__first_name')
     serializer_class = TeacherSerializer
     lookup_field = "user__username"
 
@@ -34,3 +35,8 @@ class CheckUserType(APIView):
     def get(self, request, username):
         type_of_user = check_user(username)
         return HttpResponse(json.dumps({'type': type_of_user}), content_type="application/json", status=200)
+
+def index(request):
+    template = loader.get_template("accounts/index.html")
+    context = {}
+    return HttpResponse(template.render(context,request))
