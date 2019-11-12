@@ -15,7 +15,6 @@ from accounts.models import Teacher
 
 
 
-
 class ProposeProject(View):
     @csrf_exempt
     def post(self, request):
@@ -44,21 +43,19 @@ class ProposeProject(View):
 
 class MentorProposalViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
-    def get_queryset(self):
-        queryset = Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=0).reverse()
-        return queryset
 
-# class MentorProposalList(View):
-#     @csrf_exempt
-#     def get(self, request, mentor__user__username):
-#         proposals = list(Project.objects.all().select_related('mentor__user').filter(mentor__user__username=mentor__user__username).defer('associated_files', 'proposal'))
-#         print(proposals)
-#         serializer = ProjectProposalSerializer(data=proposals, many=True)
-#         if serializer.is_valid():
-#             return HttpResponse(serializer, status=200, content_type="application/json")
-#         else:
-#             print(serializer.errors)
-#             return HttpResponse("errors", status=200, content_type="application/json")
+    def get_queryset(self):
+        queryset = Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=0)
+        result = []
+        for item in queryset:
+            flag = True
+            for member in item.members:
+                if member.lock == 1:
+                    flag = False
+                    break
+            if flag:
+                result.append(item)
+        return result
 
 
 class StudentProposalViewSet(viewsets.ModelViewSet):
@@ -72,7 +69,6 @@ class StudentProposalViewSet(viewsets.ModelViewSet):
         qset = (qset1 | qset2 | qset3 | qset4).order_by('updated_at').reverse()
         return qset
         
-
 
 class DetailProposalViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
@@ -97,22 +93,31 @@ class GetExcel(APIView):
             writer.writerow(row)
         return response
 
+
 class GetAcceptedProposals(viewsets.ModelViewSet):
     serializer_class = ProjectProposalSerializer
+
     def get_queryset(self):
         return Project.objects.order_by('updated_at').filter(mentor__user_id=self.kwargs['mentor__user_id']).filter(status=1).reverse()
 
+
 class ProposalStatus(APIView):
     serializer_class = ProjectProposalSerializer
-    def put(self,request,*args,**kwargs):
+
+    def put(self,request,status, pk):
         try:
-            proposal = Project.objects.get(pk=kwargs['id'])
-            if kwargs['status']==0:
-                proposal.status=0
-            elif kwargs['status']==1:
-                proposal.status=1
-            elif kwargs['status']==2:
-                proposal.status=2
+            proposal = Project.objects.get(pk=pk)
+            if status == 0:
+                proposal.status = 0
+            elif status == 1:
+                proposal.status = 1
+            elif status == 2:
+                for member in proposal.members:
+                    if member.lock == 1:
+                        return HttpResponse(json.dumps({'errors': { 'Member Locked' : member.sap_id}}),status=400, content_type="application/json")
+                proposal.status = 2
+                for member in proposal.members:
+                    member.lock = 1
             else:
                 return HttpResponse(json.dumps({'errors':'Invalid status sent'}),status=400,content_type="application/json")
             mentor = Teacher.objects.get(pk=proposal.mentor_id)
@@ -140,4 +145,4 @@ class ProposalStatus(APIView):
 
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
         except Project.DoesNotExist:
-            return HttpResponse(json.dumps({'errors': 'Object does not exist'}), status=400, content_type="application/json")
+            return HttpResponse(json.dumps({'errors': 'Object does not exist'}), status=404, content_type="application/json")
