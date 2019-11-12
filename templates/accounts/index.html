@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,11 +70,8 @@ span.psw {
 
 <h2>Login Form</h2>
 
-<form action="https://localhost/api/auth/token/login/" method="post">
-  <div class="imgcontainer">
-    <img src="download.jpg" alt="Avatar" class="avatar">
-  </div>
-
+<form action="{% url 'index' %}" method="post">
+    {% csrf_token %}
   <div class="container">
     <label for="uname"><b>Username</b></label>
     <input type="text" placeholder="Enter Username" name="username" required>
@@ -85,21 +80,7 @@ span.psw {
     <input type="password" placeholder="Enter Password" name="password" required>
         
     <button type="submit">Login</button>
-    <!--+<label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label> -->
   </div>
-
-<!--  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>-->
 </form>
-    <a href="5100001.jpg" download="test"><img src="5100001.jpg" alt ="thumbnail" width="120"/>
-    <button type="button"> Download</button>
-    </a>
-    
-    <iframe width="402" height="346" frameborder="0" scrolling="no" src="https://onedrive.live.com/embed?resid=C7BBBC4DCB201C58%211099&authkey=%21AFMa0lBiqpIiaxg&em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True"></iframe>
-
 </body>
 </html>

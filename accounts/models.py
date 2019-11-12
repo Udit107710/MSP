@@ -40,13 +40,12 @@ class Student(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="students", primary_key=True)
     enrollment_number = models.CharField(max_length=10)
-    sap_id = models.CharField(max_length=10,unique=True)
+    sap_id = models.CharField(max_length=10, unique=True)
     program = models.CharField(max_length=100)
     semester = models.IntegerField(validators=[MaxValueValidator(12), MinValueValidator(1)])
-    cgpa = models.FloatField(blank=True)
+    CGPA = models.FloatField(blank=True, validators=[MaxValueValidator(10), MinValueValidator(0)])
     lock = models.IntegerField(default=0)
     type_of_user = models.IntegerField(choices=USER_TYPE_CHOICES, default=0)
-    lock = models.IntegerField(default=0)
 
     class Meta:
         permissions = [('manage_users', 'Can manage users')]

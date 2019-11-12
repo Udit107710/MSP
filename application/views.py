@@ -14,7 +14,6 @@ from accounts.models import Student
 from accounts.models import Teacher
 
 
-
 class ProposeProject(View):
     @csrf_exempt
     def post(self, request):
@@ -77,7 +76,7 @@ class DetailProposalViewSet(viewsets.ModelViewSet):
 
 
 class GetExcel(APIView):
-    def get(self, request,id,status):
+    def get(self, request, id, status):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
         writer = csv.writer(response)
@@ -88,8 +87,7 @@ class GetExcel(APIView):
         writer.writerow(fields)
 
         for project in projects:
-            row=[project.project_type,project.title,project.abstract,project.proposal,
-            project.associated_files,project.status,project.member1.user.first_name,project.member2.user.first_name,project.mentor.user.first_name+" "+project.mentor.user.last_name]
+            row=[project.project_type, project.title, project.abstract, project.proposal, project.associated_files, project.status, project.member1.user.first_name, project.member2.user.first_name, project.mentor.user.first_name+" "+project.mentor.user.last_name]
             writer.writerow(row)
         return response
 
@@ -127,7 +125,7 @@ class ProposalStatus(APIView):
             mentor.save()
             proposal.save()
             #lock the student if proposal is accepted
-            if proposal.status==1:
+            if proposal.status == 1:
                 memberlist = []
                 if proposal.member1!=None:
                     memberlist.append(proposal.member1)

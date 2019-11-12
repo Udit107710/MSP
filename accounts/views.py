@@ -8,6 +8,8 @@ import logging
 from .models import Student, Teacher
 from .serializers import StudentSerializer, TeacherSerializer, UserSerializer
 from django.template import loader
+from .forms import LoginForm
+from django.contrib.auth import authenticate, login
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +38,20 @@ class CheckUserType(APIView):
         type_of_user = check_user(username)
         return HttpResponse(json.dumps({'type': type_of_user}), content_type="application/json", status=200)
 
-def index(request):
-    template = loader.get_template("accounts/index.html")
-    context = {}
-    return HttpResponse(template.render(context,request))
+
+class Index(APIView):
+    def get(self, request):
+        template = loader.get_template("accounts/index.html")
+        context = {}
+        return HttpResponse(template.render(context, request))
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            qs = Teacher.objects.all().only('user__username')
+            if {'user__username': form['username']} in list(qs):
+                user = authenticate(request, username=form['username'], password=form['password'])
+                login(request, user)
+                return HttpResponse(json.dumps({"Status": "Logged in"}), content_type="application/json")
+            return HttpResponse(json.dumps({"status": "You're not a teacher"}), content_type="application/json")
+        return HttpResponse(json.dumps({"status": "Invalid form"}), content_type="application/json")
