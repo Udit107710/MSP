@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProposeProject, StudentProposalViewSet, DetailProposalViewSet, GetExcel, MentorProposalViewSet, GetAcceptedProposals, ProposalStatus
+from .views import ProposeProject, StudentProposalViewSet, DetailProposalViewSet, GetExcel, MentorProposalViewSet, GetAcceptedProposals, ProposalStatus, GetHODExcel
 #TODO: show only those proposals whose status is "not accepted"
 mentor_proposal_list = MentorProposalViewSet.as_view({
     'get': 'list'
@@ -27,4 +27,5 @@ urlpatterns = [
     path(r"proposals/excel/accepted/<int:id>/status/<int:status>", GetExcel.as_view(), name="proposals-excel"),
     path(r"proposals/mentor/accepted/<int:mentor__user_id>",accepted_proposal,name="accepted-proposal"),
     path(r"proposal/mentor/<int:id>/changestatus/<int:status>",ProposalStatus.as_view(),name="proposal_update"),
+    path(r"proposal/excel/hod", GetHODExcel.as_view(), name="hod-excel")
 ]

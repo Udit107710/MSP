@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <a href="{% url 'hod-excel' %}" download="test">
+    <button type="button" float="right"> Download</button>
+    </a>
+    <table align="center" border="2px" style="width:700px;border-collapse: collapse; line-height:20px">
+        <tr>
+            <th>Faculty Name</th>
+            <th>Number of students per faculty</th>
+            <th>Number of projects per faculty</th>
+        </tr>
+        {% for info in row %}
+        <tr>
+            <td align="center">{{ info.user }}</td>
+            <td align="center">{{ info.hello }}</td>
+            <td align="center">{{ info.slots_occupied }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+
+</html>

@@ -144,3 +144,19 @@ class ProposalStatus(APIView):
             return HttpResponse(json.dumps({'errors': ''}), status=200, content_type="application/json")
         except Project.DoesNotExist:
             return HttpResponse(json.dumps({'errors': 'Object does not exist'}), status=404, content_type="application/json")
+
+
+class GetHODExcel(APIView):
+    def get(self, request):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
+        writer = csv.writer(response)
+        projects = list(Project.objects.all())
+
+        fields = ['Project Type', 'Title', 'Description', 'proposal', 'associated_files', 'Status', 'member1','member2','Mentor']
+        writer.writerow(fields)
+
+        for project in projects:
+            row=[project.project_type, project.title, project.abstract, project.proposal, project.associated_files, project.status, project.member1.user.first_name, project.member2.user.first_name, project.mentor.user.first_name+" "+project.mentor.user.last_name]
+            writer.writerow(row)
+        return response

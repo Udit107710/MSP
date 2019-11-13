@@ -1,7 +1,7 @@
-from rest_framework.views import APIView
+from rest_framework.views import APIView, View
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, redirect, render
 import json
 from .utils import check_user
 import logging
@@ -10,7 +10,7 @@ from .serializers import StudentSerializer, TeacherSerializer, UserSerializer
 from django.template import loader
 from .forms import LoginForm
 from django.contrib.auth import authenticate, login
-
+from rest_framework import permissions
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ class CheckUserType(APIView):
 
 
 class Index(APIView):
+    permission_classes = [permissions.AllowAny]
     def get(self, request):
         template = loader.get_template("accounts/index.html")
         context = {}
@@ -48,10 +49,25 @@ class Index(APIView):
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
-            qs = Teacher.objects.all().only('user__username')
-            if {'user__username': form['username']} in list(qs):
-                user = authenticate(request, username=form['username'], password=form['password'])
-                login(request, user)
-                return HttpResponse(json.dumps({"Status": "Logged in"}), content_type="application/json")
-            return HttpResponse(json.dumps({"status": "You're not a teacher"}), content_type="application/json")
+            try:
+                qs = Teacher.objects.get(user__username=form.cleaned_data['username'])
+            except:
+                print(form.cleaned_data['username'])
+                return HttpResponse(json.dumps({"status": "You're not a teacher"}), content_type="application/json")
+            user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            login(request, user)
+            return redirect("hod-table", username=form.cleaned_data['username'])
+
         return HttpResponse(json.dumps({"status": "Invalid form"}), content_type="application/json")
+
+
+class HODTable(View):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, username):
+        hod = Teacher.objects.get(user__username=username)
+        department = hod.department
+        teachers = Teacher.objects.filter(department=department).select_related("user")
+        context = {'row': teachers}
+        print(context)
+        return render(request, "accounts/HoD_Table.html", context)
