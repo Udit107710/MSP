@@ -5,13 +5,14 @@ from django.shortcuts import HttpResponse, redirect, render
 import json
 from .utils import check_user
 import logging
-from .models import Student, Teacher
+from .models import Teacher
 from .serializers import StudentSerializer, TeacherSerializer, UserSerializer
 from django.template import loader
 from .forms import LoginForm
 from django.contrib.auth import authenticate, login
 from rest_framework import permissions, status
 from application.models import Project
+from student.models import Student
 
 logger = logging.getLogger(__name__)
 

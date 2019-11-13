@@ -10,8 +10,8 @@ from rest_framework.views import APIView
 import csv
 import json
 from itertools import chain
-from accounts.models import Student
 from accounts.models import Teacher
+from student.models import Student
 
 
 class ProposeProject(View):

@@ -1,6 +1,8 @@
 from django import forms
 from .models import Project
-from accounts.models import Student
+from student.models import Student
+
+
 class ProjectForm(forms.ModelForm):
     member1 = forms.ModelChoiceField(Student.objects.filter(lock=0))
     # member2 = forms.ModelChoiceField(Student.objects.filter(lock=0),required=False)

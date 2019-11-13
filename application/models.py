@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from accounts.models import Student, Teacher
+from accounts.models import  Teacher
+from student.models import Student
 
 
 class Project(models.Model):
@@ -28,10 +29,9 @@ class Project(models.Model):
 
     status = models.IntegerField(choices=PROJECT_STATUS_CHOICES, default=0, blank=True, null=True)
 
-    # members = models.ManyToManyField(Student, blank=True)
     member1 = models.ForeignKey(Student, blank=False, on_delete=models.DO_NOTHING, related_name="member1")
-    member2 = models.ForeignKey(Student, blank=True, null=True, on_delete=models.DO_NOTHING, related_name="member2", default=None)
-    member3 = models.ForeignKey(Student, blank=True, null=True, on_delete=models.DO_NOTHING, related_name="member3", default=None)
+    member2 = models.ForeignKey(Student, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="member2", default=None)
+    member3 = models.ForeignKey(Student, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="member3", default=None)
     member4 = models.ForeignKey(Student, blank=True, null=True, on_delete=models.DO_NOTHING, related_name="member4", default=None)
 
     mentor = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING, blank=True, null=True, name="mentor")

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from .models import Student, Teacher
-
+from .models import  Teacher
+from student.models import Student
 
 def check_student(username):
     user = Student.objects.filter(user__username=username)
