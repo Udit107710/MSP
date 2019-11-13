@@ -16,13 +16,13 @@
         <tr>
             <th>Project ID</th>
             <th>Faculty Name</th>
-            <th>Number of projects per faculty</th>
+            <th>Number of projects undertaken</th>
             <th>Title</th>
-            <th>Project Type</th>
+{#            <th>Project Type</th>#}
             <th colspan="3">Student Info</th>
         </tr>
         <tr>
-            <th colspan="5"></th>>
+            <th colspan="4"></th>>
             <th scope="col">Branch</th>>
             <th scope="col">Name</th>>
             <th scope="col">SAP ID</th>>
@@ -33,32 +33,31 @@
             <td align="center">{{ info.mentor.user.username }}</td>
             <td align="center">{{ info.mentor.slots_occupied }}</td>
             <td align="center">{{ info.title }}</td>
-            <td align="center">{{ info.project_type }}</td>
+{#            <td align="center">{{ info.project_type }}</td>#}
 
             <td align="center">{{ info.member1.program }}</td>
             <td align="center">{{ info.member1.user.first_name }}</td>
             <td align="center">{{ info.member1.sap_id }}</td>
         </tr>
         <tr>
-            <td colspan="5"></td>
+            <td colspan="4"></td>
             <td align="center">{{ info.member2.program }}</td>
             <td align="center">{{ info.member2.user.first_name }}</td>
             <td align="center">{{ info.member2.sap_id }}</td>
         </tr>
         <tr>
-            <td colspan="5"></td>
+            <td colspan="4"></td>
             <td align="center">{{ info.member3.program }}</td>
             <td align="center">{{ info.member3.user.first_name }}</td>
             <td align="center">{{ info.member3.sap_id }}</td>
         </tr>
         {% if info.member4 %}
             <tr>
-                <td colspan="5"></td>
+                <td colspan="4"></td>
                 <td align="center">{{ info.member4.program }}</td>
                 <td align="center">{{ info.member4.user.first_name }}</td>
                 <td align="center">{{ info.member4.sap_id }}</td>
             </tr>
-
         {% endif %}
         {% endfor %}
     </table>

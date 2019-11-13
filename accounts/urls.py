@@ -26,5 +26,5 @@ urlpatterns = [
 
     #index page
     path('login/', Index.as_view(), name='index'),
-    path('hod_table/<str:username>', HODTable.as_view(), name="hod-table")
+    path('hod_table', HODTable.as_view(), name="hod-table")
 ]

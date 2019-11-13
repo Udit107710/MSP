@@ -60,7 +60,7 @@ class Index(APIView):
             else:
                 return HttpResponse(json.dumps({"User not found!"}), content_type="application/json")
             if qs.type_of_user == 1:
-                return redirect("hod-table", username=form.cleaned_data['username'])
+                return redirect("hod-table")
             if qs.type_of_user == 2:
                 return HttpResponse(json.dumps({"You are an AC"}), content_type="application/json")
             if qs.type_of_user == 3:
@@ -71,7 +71,8 @@ class Index(APIView):
 class HODTable(View):
     permission_classes = [permissions.AllowAny]
 
-    def get(self, request, username):
+    def get(self, request):
+        username = request.user.username
         hod = Teacher.objects.get(user__username=username)
         department = hod.department
         data = Project.objects.filter(mentor__department=department)

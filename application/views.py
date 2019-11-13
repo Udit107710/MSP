@@ -155,7 +155,7 @@ class GetHODExcel(APIView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
         writer = csv.writer(response)
-        fields = ["Project ID", "Faculty Name", "No of projects per faculty", "Title", "Project Type", "Student 1", "Student 2", "Student 3", "Student 4"]
+        fields = ["Project ID", "Faculty Name", "No of projects per faculty", "Title", "Student 1", "Student 2", "Student 3", "Student 4"]
         writer.writerow(fields)
 
         # for project in projects:
@@ -163,13 +163,13 @@ class GetHODExcel(APIView):
         #     writer.writerow(row)
         for info in data:
             if info.member4:
-                row = [info.id, info.mentor.user.username, info.mentor.slots_occupied, info.title, info.project_type,
+                row = [info.id, info.mentor.user.username, info.mentor.slots_occupied, info.title,
                        [info.member1.user.first_name, info.member1.program, info.member1.sap_id],
                        [info.member2.user.first_name, info.member2.program, info.member2.sap_id],
                        [info.member3.user.first_name, info.member3.program, info.member3.sap_id],
                        [info.member4.user.first_name, info.member4.program, info.member4.sap_id]]
             else:
-                row = [info.id, info.mentor.user.username, info.mentor.slots_occupied, info.title, info.project_type,
+                row = [info.id, info.mentor.user.username, info.mentor.slots_occupied, info.title,
                        [info.member1.user.first_name, info.member1.program, info.member1.sap_id],
                        [info.member2.user.first_name, info.member2.program, info.member2.sap_id],
                        [info.member3.user.first_name, info.member3.program, info.member3.sap_id],]
