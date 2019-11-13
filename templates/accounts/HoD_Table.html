@@ -9,9 +9,9 @@
 </head>
 
 <body>
-    <a href="{% url 'hod-excel' %}" download="test">
-    <button type="button" float="right"> Download</button>
-    </a>
+    <form action="{% url 'hod-excel' %}">
+        <button type="submit" value="Download">Download</button>
+    </form>
     <table align="center" border="2px" style="width:700px;border-collapse: collapse; line-height:20px">
         <tr>
             <th>Faculty Name</th>

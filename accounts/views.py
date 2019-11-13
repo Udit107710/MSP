@@ -56,8 +56,12 @@ class Index(APIView):
                 return HttpResponse(json.dumps({"status": "You're not a teacher"}), content_type="application/json")
             user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             login(request, user)
-            return redirect("hod-table", username=form.cleaned_data['username'])
-
+            if qs.type_of_user == 1:
+                return redirect("hod-table", username=form.cleaned_data['username'])
+            if qs.type_of_user == 2:
+                return HttpResponse(json.dumps({"You are a AC"}), content_type="application/json")
+            if qs.type_of_user == 3:
+                return HttpResponse(json.dumps({"You are a professor!"}), content_type="application/json")
         return HttpResponse(json.dumps({"status": "Invalid form"}), content_type="application/json")
 
 
