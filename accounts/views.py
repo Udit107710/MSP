@@ -75,7 +75,5 @@ class HODTable(View):
         hod = Teacher.objects.get(user__username=username)
         department = hod.department
         data = Project.objects.filter(mentor__department=department)
-
-        print(data[0].mentor.user.username)
         context = {'row': data}
         return render(request, "accounts/HoD_Table.html", context)
