@@ -14,15 +14,24 @@
     </form>
     <table align="center" border="2px" style="width:700px;border-collapse: collapse; line-height:20px">
         <tr>
+            <th>Project ID</th>
             <th>Faculty Name</th>
-            <th>Number of students per faculty</th>
             <th>Number of projects per faculty</th>
+            <th>Student Info</th>
         </tr>
         {% for info in row %}
         <tr>
-            <td align="center">{{ info.user }}</td>
-            <td align="center">{{ info.hello }}</td>
-            <td align="center">{{ info.slots_occupied }}</td>
+            <td align="center">{{ info.id }}</td>
+            <td align="center">{{ info.mentor.user.username }}</td>
+            <td align="center">{{ info.mentor.slots_occupied }}</td>
+            <td align="center">{{ info.member1.sap_id }}, {{ info.member1.user.first_name }}</td>
+            <td align="center">{{ info.member2.sap_id }}, {{ info.member2.user.first_name }}</td>
+            <td align="center">{{ info.member3.sap_id }}, {{ info.member3.user.first_name }}</td>
+            {% if info.member4 %}
+                <td align="center">{{ info.member4.sap_id }}, {{ info.member4.user.first_name }}</td>
+                {% else %}
+                <td></td>>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

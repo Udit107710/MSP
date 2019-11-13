@@ -149,7 +149,8 @@ class ProposalStatus(APIView):
 class GetHODExcel(APIView):
     def get(self, request):
         user = request.user
-        hod = Teacher.objects.get(user=user)
+        print(user)
+        hod = Teacher.objects.get(user__username=user.username)
         department = hod.department
         teachers = Teacher.objects.filter(department=department).select_related("user")
 
