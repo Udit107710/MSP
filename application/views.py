@@ -21,16 +21,16 @@ class ProposeProject(View):
         
         if form.is_valid():
             proposal = form.save(commit=False)
-            sap_2 = request.POST.get('member2_sapid',-1)
-            sap_3 = request.POST.get('member3_sapid',-1)
-            sap_4 = request.POST.get('member4_sapid',-1)
+            sap_2 = request.POST.get('member2_sapid', -1)
+            sap_3 = request.POST.get('member3_sapid', -1)
+            sap_4 = request.POST.get('member4_sapid', -1)
             
             try:
-                if sap_2!=-1:
+                if sap_2 != -1:
                     proposal.member2 = Student.objects.filter(lock=0).get(sap_id=sap_2)
-                if sap_3!=-1:
+                if sap_3 != -1:
                     proposal.member3 = Student.objects.filter(lock=0).get(sap_id=sap_3)
-                if sap_4!=-1:
+                if sap_4 != -1:
                     proposal.member4 = Student.objects.filter(lock=0).get(sap_id=sap_4)
             except Student.DoesNotExist:
                 return HttpResponse(json.dumps({'errors': "member does not exits or is locked "+str(sap_2)+" "+str(sap_3)+" "+str(sap_4)}), status=400, content_type="application/json")
@@ -89,10 +89,8 @@ class GetExcel(APIView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
         writer = csv.writer(response)
-        #projects = list(Project.objects.filter(mentor__user__username=username).defer('mentor'))
-        # projects = list(Project.objects.all().defer('mentor'))
         projects = list(Project.objects.order_by('created_at').filter(mentor_id=id).filter(status=status).reverse())
-        fields = ['Project Type', 'Title', 'Description', 'proposal', 'associated_files', 'Status', 'member1','member2','Mentor']
+        fields = ['Project Type', 'Title', 'Description', 'proposal', 'associated_files', 'Status', 'member1', 'member2', 'Mentor']
         writer.writerow(fields)
 
         for project in projects:
@@ -119,7 +117,7 @@ class ProposalStatus(APIView):
             elif status == 1:
                 proposal.status = 1
             elif status == 2:
-                members=[]
+                members = []
                 if proposal.member1:
                     members.append(proposal.member1)
                 if proposal.member2:
@@ -137,21 +135,22 @@ class ProposalStatus(APIView):
             else:
                 return HttpResponse(json.dumps({'errors':'Invalid status sent'}),status=400,content_type="application/json")
             mentor = Teacher.objects.get(pk=proposal.mentor_id)
-            if(mentor.slots_occupied==5):
+
+            if(mentor.slots_occupied == 5):
                 return HttpResponse(json.dumps({'errors':'Mentor slots_occupied are full'}),status=400,content_type="application/json")
             mentor.slots_occupied = mentor.slots_occupied+1
             mentor.save()
             proposal.save()
-            #lock the student if proposal is accepted
+
             if proposal.status == 1:
                 memberlist = []
-                if proposal.member1!=None:
+                if proposal.member1 != None:
                     memberlist.append(proposal.member1)
-                if proposal.member2!=None:
+                if proposal.member2 != None:
                     memberlist.append(proposal.member2)
-                if proposal.member3!=None:
+                if proposal.member3 != None:
                     memberlist.append(proposal.member3)
-                if proposal.member4!=None:
+                if proposal.member4 != None:
                     memberlist.append(proposal.member4)
                 
                 for member in memberlist:
@@ -176,9 +175,6 @@ class GetHODExcel(APIView):
         fields = ["Project ID", "Faculty Name", "No of projects per faculty", "Title", "Student 1", "Student 2", "Student 3", "Student 4"]
         writer.writerow(fields)
 
-        # for project in projects:
-        #     row=[project.project_type, project.title, project.abstract, project.proposal, project.associated_files, project.status, project.member1.user.first_name, project.member2.user.first_name, project.mentor.user.first_name+" "+project.mentor.user.last_name]
-        #     writer.writerow(row)
         for info in data:
             if info.member4:
                 row = [info.id, info.mentor.user.username, info.mentor.slots_occupied, info.title,

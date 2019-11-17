@@ -27,5 +27,6 @@ urlpatterns = [
     path(r"proposals/excel/accepted/<int:id>/status/<int:status>", GetExcel.as_view(), name="proposals-excel"),
     path(r"proposals/mentor/accepted/<int:mentor__user_id>",accepted_proposal,name="accepted-proposal"),
     path(r"proposal/mentor/<int:pk>/changestatus/<int:status>",ProposalStatus.as_view(),name="proposal_update"),
-    path(r"proposal/excel/hod", GetHODExcel.as_view(), name="hod-excel")
+    path(r"proposal/excel/hod", GetHODExcel.as_view(), name="hod-excel"),
+
 ]

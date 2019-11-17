@@ -43,6 +43,7 @@ class CheckUserType(APIView):
 
 class Index(APIView):
     permission_classes = [permissions.AllowAny]
+
     def get(self, request):
         template = loader.get_template("accounts/index.html")
         context = {}
@@ -70,12 +71,28 @@ class Index(APIView):
 
 
 class HODTable(View):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         username = request.user.username
-        hod = Teacher.objects.get(user__username=username,type_of_user=1)
+        hod = Teacher.objects.get(user__username=username, type_of_user=1)
         department = hod.department
         data = Project.objects.filter(mentor__department=department)
         context = {'row': data}
         return render(request, "accounts/HoD_Table.html", context)
+
+
+class ACTable(View):
+    # permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        username = request.user.username
+        ac = Teacher.objects.get(user__username=username, type_of_user=2)
+
+        qs1 = Project.objects.filter(member1__program__AC=ac)
+        qs2 = Project.objects.filter(member2__program__AC=ac)
+        qs3 = Project.objects.filter(member3__program__AC=ac)
+        qs4 = Project.objects.filter(member4__program__AC=ac)
+        qs = qs1 | qs2 | qs3 | qs4
+        context = {'row': qs}
+        return render(request, "accounts/AC_Table.html", context)

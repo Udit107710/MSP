@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TeacherViewSet, StudentViewSet, UserViewSet, CheckUserType, Index, HODTable
+from .views import TeacherViewSet, StudentViewSet, UserViewSet, CheckUserType, Index, HODTable, ACTable
 
 teacher_list = TeacherViewSet.as_view({
     'get': 'list'
@@ -24,7 +24,8 @@ urlpatterns = [
     path(r"teacher/<str:user__username>", teacher_detail, name="teacher-detail"),
     path(r"check/<str:username>", CheckUserType.as_view(), name="check-user-type"),
 
-    #index page
+    #web
     path('login/', Index.as_view(), name='index'),
-    path('hod_table', HODTable.as_view(), name="hod-table")
+    path('hod_table', HODTable.as_view(), name="hod-table"),
+    path('ac_table', ACTable.as_view(), name="ac-table")
 ]
