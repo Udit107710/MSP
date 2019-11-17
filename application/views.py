@@ -48,7 +48,16 @@ class MentorProposalViewSet(viewsets.ModelViewSet):
         result = []
         for item in queryset:
             flag = True
-            for member in item.members:
+            members = []
+            if item.member1:
+                members.append(item.member1)
+            if item.member2:
+                members.append(item.member2)
+            if item.member3:
+                members.append(item.member3)
+            if item.member4:
+                members.append(item.member4)
+            for member in members:
                 if member.lock == 1:
                     flag = False
                     break
@@ -110,11 +119,20 @@ class ProposalStatus(APIView):
             elif status == 1:
                 proposal.status = 1
             elif status == 2:
-                for member in proposal.members:
+                members=[]
+                if proposal.member1:
+                    members.append(proposal.member1)
+                if proposal.member2:
+                    members.append(proposal.member2)
+                if proposal.member3:
+                    members.append(proposal.member3)
+                if proposal.member4:
+                    members.append(proposal.member4)
+                for member in members:
                     if member.lock == 1:
                         return HttpResponse(json.dumps({'errors': { 'Member Locked' : member.sap_id}}),status=400, content_type="application/json")
                 proposal.status = 2
-                for member in proposal.members:
+                for member in members:
                     member.lock = 1
             else:
                 return HttpResponse(json.dumps({'errors':'Invalid status sent'}),status=400,content_type="application/json")

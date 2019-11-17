@@ -59,13 +59,13 @@ class Index(APIView):
             if user is not None:
                 login(request, user)
             else:
-                return HttpResponse(json.dumps({"User not found!"}), content_type="application/json")
+                return HttpResponse(json.dumps({"status":"User not found!"}), content_type="application/json")
             if qs.type_of_user == 1:
                 return redirect("hod-table")
             if qs.type_of_user == 2:
-                return HttpResponse(json.dumps({"You are an AC"}), content_type="application/json")
+                return HttpResponse(json.dumps({"status":"You are an AC"}), content_type="application/json")
             if qs.type_of_user == 3:
-                return HttpResponse(json.dumps({"You are a professor!"}), content_type="application/json")
+                return HttpResponse(json.dumps({"status":"You are a professor!"}), content_type="application/json")
         return HttpResponse(json.dumps({"status": "Invalid form"}), content_type="application/json")
 
 
@@ -74,7 +74,7 @@ class HODTable(View):
 
     def get(self, request):
         username = request.user.username
-        hod = Teacher.objects.get(user__username=username)
+        hod = Teacher.objects.get(user__username=username,type_of_user=1)
         department = hod.department
         data = Project.objects.filter(mentor__department=department)
         context = {'row': data}
