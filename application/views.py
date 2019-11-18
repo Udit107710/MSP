@@ -166,7 +166,7 @@ class ProposalStatus(APIView):
 class GetHODExcel(APIView):
     def get(self, request):
         user = request.user
-        hod = Teacher.objects.get(user__username=user.username)
+        hod = Teacher.objects.get(user__username=user.username, type_of_user=1)
         department = hod.department
         data = Project.objects.filter(mentor__department=department)
         response = HttpResponse(content_type='text/csv')
@@ -187,5 +187,40 @@ class GetHODExcel(APIView):
                        [info.member1.user.first_name, info.member1.program, info.member1.sap_id],
                        [info.member2.user.first_name, info.member2.program, info.member2.sap_id],
                        [info.member3.user.first_name, info.member3.program, info.member3.sap_id],]
+            writer.writerow(row)
+        return response
+
+
+class GetACExcel(APIView):
+    def get(self, request):
+        user = request.user
+        ac = Teacher.objects.get(user__username=user.username, type_of_user=2)
+
+        qs1 = Project.objects.filter(member1__program__AC=ac)
+        qs2 = Project.objects.filter(member2__program__AC=ac)
+        qs3 = Project.objects.filter(member3__program__AC=ac)
+        qs4 = Project.objects.filter(member4__program__AC=ac)
+        data = qs1 | qs2 | qs3 | qs4
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="sheet.csv"'
+        writer = csv.writer(response)
+        fields = ["Project ID", "Student 1", "Student 2", "Student 3", "Student 4", "Title", "Mentor", "Field of Study"]
+        writer.writerow(fields)
+
+        for info in data:
+            if info.member4:
+                row = [info.id,
+                       [info.member1.user.first_name, info.member1.program, info.member1.sap_id],
+                       [info.member2.user.first_name, info.member2.program, info.member2.sap_id],
+                       [info.member3.user.first_name, info.member3.program, info.member3.sap_id],
+                       [info.member4.user.first_name, info.member4.program, info.member4.sap_id],
+                       info.title, info.mentor.user.username, info.mentor.field_of_study]
+            else:
+                row = [info.id,
+                       [info.member1.user.first_name, info.member1.program, info.member1.sap_id],
+                       [info.member2.user.first_name, info.member2.program, info.member2.sap_id],
+                       [info.member3.user.first_name, info.member3.program, info.member3.sap_id],
+                       info.title, info.mentor.user.username, info.mentor.field_of_study]
             writer.writerow(row)
         return response
