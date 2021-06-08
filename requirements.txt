@@ -35,7 +35,7 @@ idna==2.8
 incremental==17.5.0
 msgpack==0.6.1
 phonenumbers==8.10.17
-Pillow==6.2.1
+Pillow==8.2.0
 promise==2.2.1
 psycopg2==2.8.3
 pycparser==2.19
